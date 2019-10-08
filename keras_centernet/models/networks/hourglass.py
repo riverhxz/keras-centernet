@@ -14,10 +14,10 @@ from __future__ import print_function
 
 import os
 
-from keras.models import Model
-from keras.layers import Conv2D, Input, Activation, BatchNormalization, Add, UpSampling2D, ZeroPadding2D
-from keras.utils import get_file
-import keras.backend as K
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Conv2D, Input, Activation, BatchNormalization, Add, UpSampling2D, ZeroPadding2D
+from tensorflow.keras.utils import get_file
+import tensorflow.keras.backend as K
 import numpy as np
 
 

@@ -14,7 +14,7 @@ def _nms(heat, kernel=3):
   return heat * keep
 
 
-def _ctdet_decode(hm, reg, wh, k=100, output_stride=4):
+def ctdet_decode_internal(hm, reg, wh, k=100, output_stride=4):
   hm = K.sigmoid(hm)
   hm = _nms(hm)
   hm_shape = K.shape(hm)
@@ -60,7 +60,7 @@ def _ctdet_decode(hm, reg, wh, k=100, output_stride=4):
 def CtDetDecode(model, hm_index=3, reg_index=4, wh_index=5, k=100, output_stride=4):
   def _decode(args):
     hm, reg, wh = args
-    return _ctdet_decode(hm, reg, wh, k=k, output_stride=output_stride)
+    return ctdet_decode_internal(hm, reg, wh, k=k, output_stride=output_stride)
   output = Lambda(_decode)([model.outputs[i] for i in [hm_index, reg_index, wh_index]])
   model = Model(model.input, output)
   return model

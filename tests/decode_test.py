@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from keras_centernet.models.decode import _ctdet_decode, _hpdet_decode
+from keras_centernet.models.decode import ctdet_decode_internal, _hpdet_decode
 from keras import backend as K
 import os
 import pickle
@@ -16,7 +16,7 @@ def test_ctdet_decode():
   keras_reg = K.constant(reg)
   keras_wh = K.constant(wh)
 
-  keras_detections = K.eval(_ctdet_decode(keras_hm, keras_reg, keras_wh, output_stride=1))
+  keras_detections = K.eval(ctdet_decode_internal(keras_hm, keras_reg, keras_wh, output_stride=1))
 
   gold_fn = 'tests/data/ctdet_decode_gold.p'
   if not os.path.exists(gold_fn):
