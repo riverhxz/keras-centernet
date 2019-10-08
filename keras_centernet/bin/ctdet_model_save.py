@@ -79,7 +79,7 @@ def main():
 
     def uint8_wrapper(model, output_max):
         inres = K.int_shape(model.inputs[0])
-        input = Input(shape=(inres[1], inres[2], 3), dtype="uint8", name='UInput')
+        input = Input(shape=(inres[1], inres[2], 3), dtype="uint8", name='Input')
         def normalize(x):
             mean = K.constant([0.40789655, 0.44719303, 0.47026116])
             std = K.constant([0.2886383, 0.27408165, 0.27809834])
@@ -113,7 +113,7 @@ def main():
     #                                      , dict(list(zip(["a", "b", "c", "d", "e", "f"], uint8_model.outputs))))
     # saved_model_dir, input_arrays=None, input_shapes=None, output_arrays=None, tag_set=None, signature_key=None
     #function(model_file, input_arrays=None, input_shapes=None, output_arrays=None, custom_objects=None)
-    converter = tf.lite.TFLiteConverter.from_keras_model_file('keras', ["UInput"], input_shapes={"UInput": [1, 512, 512, 3]},custom_objects={"Clip":Clip})
+    converter = tf.lite.TFLiteConverter.from_keras_model_file('keras', ["KInput"], input_shapes={"UInput": [1, 512, 512, 3]},custom_objects={"Clip":Clip})
 
     # converter = tf.lite.TFLiteConverter.from_saved_model("/keras-centernet/tfmodel", uint8_model.inputs,
     #                                                      {"UInput": [1, 512, 512, 3]},
@@ -124,7 +124,12 @@ def main():
 
     # converter = tf.lite.TFLiteConverter.from_session(session, uint8_model.inputs, uint8_model.outputs)
     converter.representative_dataset = representative_dataset_gen
-    converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE, tf.lite.Optimize.DEFAULT]
+    converter.optimizations = [tf.lite.Optimize.DEFAULT]
+    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+    converter.inference_input_type = tf.uint8
+    converter.inference_output_type = tf.uint8
+
+    tflite_model_quant = converter.convert()
     tflite_model = converter.convert()
     open("converted_model.tflite", "wb").write(tflite_model)
 
