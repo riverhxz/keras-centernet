@@ -113,7 +113,7 @@ def main():
     #                                      , dict(list(zip(["a", "b", "c", "d", "e", "f"], uint8_model.outputs))))
     # saved_model_dir, input_arrays=None, input_shapes=None, output_arrays=None, tag_set=None, signature_key=None
     #function(model_file, input_arrays=None, input_shapes=None, output_arrays=None, custom_objects=None)
-    converter = tf.lite.TFLiteConverter.from_keras_model_file('keras', ["KInput"], input_shapes={"UInput": [1, 512, 512, 3]},custom_objects={"Clip":Clip})
+    converter = tf.lite.TFLiteConverter.from_keras_model_file('keras', custom_objects={"Clip":Clip})
 
     # converter = tf.lite.TFLiteConverter.from_saved_model("/keras-centernet/tfmodel", uint8_model.inputs,
     #                                                      {"UInput": [1, 512, 512, 3]},
